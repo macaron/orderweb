@@ -1,7 +1,7 @@
 # MVC版受注登録システム「orderweb」
 
 ## トップページURL
-[http://localhost:8080/orderweb/SearchView1.html] (http://localhost:8080/orderweb/SearchView1.html)
+[http://localhost:8080/orderweb/SearchView1.html](http://localhost:8080/orderweb/SearchView1.html)
 
 ## コンパイル&実行方法
 - srcディレクトリに移動し下記のコマンドを実行
