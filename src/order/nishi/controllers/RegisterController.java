@@ -28,13 +28,14 @@ public class RegisterController extends HttpServlet {
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-       throws ServletException, IOException {
+            throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        try {
             int productCode = Integer.parseInt(request.getParameter("code"));
             int quantity = Integer.parseInt(request.getParameter("quantity"));
-    
+
             ProductEntity entity = (new Product()).makeProductEntityByProductCode(productCode);
 
-            HttpSession session = request.getSession();
             if (session.getAttribute("cartIn") != null) {
                 CartEntity cart = (CartEntity) session.getAttribute("cartIn");
                 cart.addCode(entity.getCode());
@@ -53,9 +54,11 @@ public class RegisterController extends HttpServlet {
                 session.setAttribute("cartIn", cart);
             }
             response.sendRedirect("./register");
-
-            // response.setContentType("text/html; charset=Windows-31J");
-            // PrintWriter out = response.getWriter();
-            // out.println(orders.getName());
+        } catch (NumberFormatException e) {
+            response.sendRedirect("./register");
+        }
+//        response.setContentType("text/html; charset=Windows-31J");
+//        PrintWriter out = response.getWriter();
+//        out.println("フォーマットエラーです");
     }
 }
