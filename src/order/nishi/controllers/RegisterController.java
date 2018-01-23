@@ -54,7 +54,7 @@ public class RegisterController extends HttpServlet {
                 session.setAttribute("cartIn", cart);
             }
             response.sendRedirect("./register");
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException | IndexOutOfBoundsException e) {
             response.sendRedirect("./register");
         }
 //        response.setContentType("text/html; charset=Windows-31J");
