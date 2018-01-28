@@ -179,7 +179,19 @@ public class OrderWrite {
     // 日付データに加工する
     private long makeOrderDate(int year, int month, int day) {
         Calendar cal = Calendar.getInstance();
-        cal.set(year, month, day);
+        cal.set(Calendar.YEAR, year);
+        cal.set(Calendar.MONTH, month);
+
+        // 月末を取得する
+        int actualDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+        System.out.println("月末日: " + actualDay);
+
+        // 日付が月末よりも大きければ月末に変更する
+        if (actualDay < day) {
+            cal.set(Calendar.DATE, actualDay);
+        } else {
+            cal.set(Calendar.DATE, day);
+        }
         return cal.getTime().getTime();
     }
 
