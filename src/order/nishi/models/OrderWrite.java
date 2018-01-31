@@ -2,6 +2,7 @@ package order.nishi.models;
 
 import java.sql.*;
 import java.util.Calendar;
+
 import order.nishi.utils.ConnectUtilMy;
 
 
@@ -17,7 +18,7 @@ public class OrderWrite {
         this.staff_c = staff_c;
 
         // 受注日時でgetTimeする
-        this.cal = this.makeOrderDate(year, month-1, day);
+        this.cal = this.makeOrderDate(year, month - 1, day);
     }
 
     // 受注見出しを登録する
@@ -179,7 +180,9 @@ public class OrderWrite {
     // 日付データに加工する
     private long makeOrderDate(int year, int month, int day) {
         Calendar cal = Calendar.getInstance();
-        cal.set(year, month, day);
+        cal.set(Calendar.YEAR, year);
+        cal.set(Calendar.MONTH, month);
+        cal.set(Calendar.DATE, day);
         return cal.getTime().getTime();
     }
 
@@ -196,7 +199,7 @@ public class OrderWrite {
             stmt = conn.prepareStatement(query);
             stmt.setInt(1, item_id);
             resultSet = stmt.executeQuery();
-            while(resultSet.next()) {
+            while (resultSet.next()) {
                 // 価格を返却する
                 return resultSet.getDouble("price");
             }

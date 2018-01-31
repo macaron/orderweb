@@ -11,6 +11,11 @@
 </head>
 <body>
 <h2>Žó’“o˜^</h2>
+<%
+    if (request.getAttribute("error_msg") != null) {
+        out.print(request.getAttribute("error_msg"));
+    }
+%>
 <form action="./confirm" method="POST">
     <label>Žó’”NŒŽ“ú</label>
     <select name="year" id="year">
@@ -102,11 +107,7 @@
     %>
 </table>
 
-<br>
-<form>
-   <INPUT type="button" onClick='history.back();' value="–ß‚é">
-   </button>
-</form>
+<p><a href="./register">–ß‚é</a></p>
 
 </body>
 </html>
