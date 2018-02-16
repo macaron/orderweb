@@ -11,6 +11,11 @@
 </head>
 <body>
 <h2>受注登録</h2>
+<%
+    if (request.getAttribute("error_msg") != null) {
+        out.print(request.getAttribute("error_msg"));
+    }
+%>
 <form action="./confirm" method="POST">
     <label>受注年月日</label>
     <select name="year" id="year">
@@ -22,25 +27,15 @@
     <select name="month" id="month">
         <%
             for (int month = 1; month <= 12; month++) {
-                // 今月をデフォルト選択する
-                if (month == (int) request.getAttribute("month")) {
-                    out.print("<option value=\"" + month + "\" selected>" + month + "</option>");
-                } else {
-                    out.print("<option value=\"" + month + "\">" + month + "</option>");
-                }
+                out.print("<option value=\"" + month + "\">" + (month) + "</option>");
             }
         %>
     </select>
     <label for="month">月</label>
     <select name="day" id="day">
         <%
-            for (int day = 1; day <= (int) request.getAttribute("maximumDay"); day++) {
-                // 今日をデフォルト選択する
-                if (day == (int)request.getAttribute("day")) {
-                    out.print("<option value=\"" + day + "\" selected>" + day + "</option>");
-                } else {
-                    out.print("<option value=\"" + day + "\">" + day + "</option>");
-                }
+            for (int day = 1; day <= 31; day++) {
+                out.print("<option value=\"" + day + "\">" + day + "</option>");
             }
         %>
     </select>
@@ -102,11 +97,7 @@
     %>
 </table>
 
-<br>
-<form>
-   <INPUT type="button" onClick='history.back();' value="戻る">
-   </button>
-</form>
+<p><a href="./register">戻る</a></p>
 
 </body>
 </html>

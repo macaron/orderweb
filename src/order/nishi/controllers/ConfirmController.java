@@ -1,6 +1,7 @@
 package order.nishi.controllers;
 
 import order.nishi.models.*;
+import order.nishi.utils.MyValidatorUtil;
 import order.nishi.utils.SessionClearUtil;
 
 import java.io.*;
@@ -31,6 +32,11 @@ public class ConfirmController extends HttpServlet {
         CartEntity cart = (CartEntity) session.getAttribute("cartIn");
         request.setAttribute("cart", cart);
 
+        // get error message from session
+        String error_msg = (String) session.getAttribute("error_msg");
+        SessionClearUtil.clearSession(request, "error_msg");
+        request.setAttribute("error_msg", error_msg);
+
         response.setContentType("text/html; charset=Windows-31J");
         request.getRequestDispatcher("/confirm.jsp").forward(request, response);
     }
@@ -43,23 +49,35 @@ public class ConfirmController extends HttpServlet {
         int customer_c = Integer.parseInt(request.getParameter("customer_c"));
         String sales_c = request.getParameter("sales_c");
 
-        // write to db
-        OrderWrite writer = new OrderWrite(year, month, day, customer_c, sales_c);
-        writer.insertOrderTitle();
-
         HttpSession session = request.getSession();
         CartEntity product = (CartEntity) session.getAttribute("cartIn");
 
-        for (int i=0; i<product.getArrayTotal(); i++) {
-            writer.insertOrderDetail(product.getCode(i), product.getCount(i));
+        // session hasn't items
+        if (product == null) {
+            session.setAttribute("error_msg", "登録する商品がありません");
+            response.sendRedirect("./confirm");
+        } else {
+            // write to database after validation
+            OrderWrite writer = new OrderWrite(year, month, day, customer_c, sales_c);
+            // check date value
+            if (MyValidatorUtil.validateDate(year, month, day)) {
+                // write a order title to database
+                writer.insertOrderTitle();
+                for (int i = 0; i < product.getArrayTotal(); i++) {
+                    writer.insertOrderDetail(product.getCode(i), product.getCount(i));
+                }
+                // update columns total_amount, sales_tax, bill
+                writer.updateOrderTitle();
+
+                // session clear
+                SessionClearUtil.clearSession(request, "cartIn");
+
+                RequestDispatcher dispatcher = request.getRequestDispatcher("complete.jsp");
+                dispatcher.forward(request, response);
+            } else {
+                session.setAttribute("error_msg", "日付が不正です");
+                response.sendRedirect("./confirm");
+            }
         }
-        // update columns total_amount, sales_tax, bill
-        writer.updateOrderTitle();
-
-        // session clear
-        SessionClearUtil.clearSession(request, "cartIn");
-
-        RequestDispatcher dispatcher = request.getRequestDispatcher("complete.jsp");
-        dispatcher.forward(request, response);
     }
 }
